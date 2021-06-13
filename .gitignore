@@ -10,4 +10,10 @@
 # Unignore Makefile
 !Makefile
 
+# ignore binary data files
+*.bin
+
+# ignore output files
+*.o
+
 .vscode/*
