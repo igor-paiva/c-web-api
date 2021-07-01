@@ -37,3 +37,29 @@ state register_row(const char * file_name, void * data, size_t size) {
 
   return CREATED;
 }
+
+state get_all(const char * file_name, LinkedList * list, size_t size) {
+  FILE * file;
+  void * current;
+
+  current = malloc(size);
+
+  if (current == NULL) return ALLOC_FAIL;
+
+  file = fopen(file_name, "rb");
+
+  if (!file) return UNABLE_OPEN_FILE;
+
+  while(fread(current, size, 1, file) > 0) {
+    state push_state = push_list(list, current, size);
+
+    if (is_error(push_state)) {
+      fclose(file);
+      return push_state;
+    }
+  };
+
+  fclose(file);
+
+  return SUCCESS;
+}

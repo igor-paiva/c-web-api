@@ -19,4 +19,6 @@ typedef enum {
  UNABLE_WRITE_FILE,
 } error_t;
 
+boolean is_error(state value);
+
 #endif
