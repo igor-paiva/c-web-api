@@ -63,3 +63,37 @@ state get_all(const char * file_name, LinkedList * list, size_t size) {
 
   return SUCCESS;
 }
+
+state find_row(
+  const char * file_name,
+  size_t size,
+  CmpFunc cmp_key,
+  void * key,
+  size_t * offset
+) {
+  FILE * file;
+  int count = 0;
+  void * current;
+  boolean found = FALSE;
+
+  file = fopen(file_name, "rb");
+
+  if (!file) return UNABLE_OPEN_FILE;
+
+  while(fread(current, size, 1, file) > 0) {
+    if ((*cmp_key)(current, key)) {
+      found = TRUE;
+      break;
+    }
+
+    count++;
+  }
+
+  fclose(file);
+
+  if (found == FALSE) return NOT_FOUND;
+
+  *offset = count * size;
+
+  return SUCCESS;
+}
