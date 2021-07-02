@@ -22,4 +22,12 @@ state find_row(
   size_t * offset
 );
 
+state get_row(
+  const char * file_name,
+  CmpFunc cmp_key,
+  void * key,
+  void * data,
+  size_t data_size
+);
+
 #endif

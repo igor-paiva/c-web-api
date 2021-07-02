@@ -97,3 +97,37 @@ state find_row(
 
   return SUCCESS;
 }
+
+state get_row(
+  const char * file_name,
+  CmpFunc cmp_key,
+  void * key,
+  void * data,
+  size_t data_size
+) {
+  FILE * file;
+  size_t offset;
+  void * row_data;
+  state find_state;
+
+  find_state = find_row(file_name, data_size, cmp_key, key, &offset);
+
+  if (is_error(find_state)) return find_state;
+
+  file = fopen(file_name, "rb");
+
+  if (!file) return UNABLE_OPEN_FILE;
+
+  fseek(file, offset, SEEK_SET);
+
+  if (fread(row_data, data_size, 1, file) != 1) {
+    fclose(file);
+    return UNABLE_READ_FILE;
+  }
+
+  fclose(file);
+
+  memcpy(data, row_data, data_size);
+
+  return SUCCESS;
+}
