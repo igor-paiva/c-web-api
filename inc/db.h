@@ -30,4 +30,12 @@ state get_row(
   size_t data_size
 );
 
+state edit_row(
+  const char * file_name,
+  CmpFunc cmp_key,
+  void * key,
+  void * new_data,
+  size_t data_size
+);
+
 #endif

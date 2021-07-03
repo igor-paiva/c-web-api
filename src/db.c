@@ -131,3 +131,33 @@ state get_row(
 
   return SUCCESS;
 }
+
+state edit_row(
+  const char * file_name,
+  CmpFunc cmp_key,
+  void * key,
+  void * new_data,
+  size_t data_size
+) {
+  FILE * file;
+  state find_state;
+  size_t offset, ret;
+
+  find_state = find_row(file_name, data_size, cmp_key, key, &offset);
+
+  if (is_error(find_state)) return find_state;
+
+  file = fopen(file_name, "rb+");
+
+  if (!file) return UNABLE_OPEN_FILE;
+
+  fseek(file, offset, SEEK_SET);
+
+  ret = fwrite(new_data, data_size, 1, file);
+
+  if (ret != 1) return UNABLE_WRITE_FILE;
+
+  fclose(file);
+
+  return UPDATED;
+}
