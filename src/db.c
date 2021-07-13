@@ -41,6 +41,7 @@ state register_row(const char * file_name, void * data, size_t size) {
 state get_all(const char * file_name, LinkedList * list, size_t size) {
   FILE * file;
   void * current;
+  state op_state = SUCCESS;
 
   current = malloc(size);
 
@@ -50,18 +51,20 @@ state get_all(const char * file_name, LinkedList * list, size_t size) {
 
   if (!file) return UNABLE_OPEN_FILE;
 
-  while(fread(current, size, 1, file) > 0) {
+  /* it should read only one member */
+  while(fread(current, size, 1, file) == 1) {
     state push_state = push_list(list, current, size);
 
     if (is_error(push_state)) {
-      fclose(file);
-      return push_state;
+      op_state = push_state;
+      break;
     }
   };
 
   fclose(file);
+  free(current);
 
-  return SUCCESS;
+  return op_state;
 }
 
 state find_row(
@@ -76,11 +79,19 @@ state find_row(
   void * current;
   boolean found = FALSE;
 
+  current = malloc(size);
+
+  if (current == NULL) return ALLOC_FAIL;
+
   file = fopen(file_name, "rb");
 
-  if (!file) return UNABLE_OPEN_FILE;
+  if (file == NULL) {
+    free(current);
+    return UNABLE_OPEN_FILE;
+  }
 
-  while(fread(current, size, 1, file) > 0) {
+  /* it should read only one member */
+  while(fread(current, size, 1, file) == 1) {
     if ((*cmp_key)(current, key)) {
       found = TRUE;
       break;
@@ -90,6 +101,7 @@ state find_row(
   }
 
   fclose(file);
+  free(current);
 
   if (found == FALSE) return NOT_FOUND;
 
@@ -106,30 +118,42 @@ state get_row(
   size_t data_size
 ) {
   FILE * file;
-  size_t offset;
-  void * row_data;
   state find_state;
+  void * row_data = NULL;
+  size_t offset, read_ret;
+  state op_state = SUCCESS;
 
   find_state = find_row(file_name, data_size, cmp_key, key, &offset);
 
   if (is_error(find_state)) return find_state;
 
+  row_data = malloc(data_size);
+
+  if (row_data == NULL) return ALLOC_FAIL;
+
   file = fopen(file_name, "rb");
 
-  if (!file) return UNABLE_OPEN_FILE;
+  if (!file) {
+    free(row_data);
+    return UNABLE_OPEN_FILE;
+  }
 
   fseek(file, offset, SEEK_SET);
 
-  if (fread(row_data, data_size, 1, file) != 1) {
-    fclose(file);
-    return UNABLE_READ_FILE;
-  }
+  read_ret = fread(row_data, data_size, 1, file);
 
   fclose(file);
 
-  memcpy(data, row_data, data_size);
+  /* it should read only one member */
+  if (read_ret == 1) {
+    memcpy(data, row_data, data_size);
+  } else {
+    op_state = UNABLE_READ_FILE;
+  }
 
-  return SUCCESS;
+  free(row_data);
+
+  return op_state;
 }
 
 state edit_row(
@@ -155,9 +179,9 @@ state edit_row(
 
   ret = fwrite(new_data, data_size, 1, file);
 
-  if (ret != 1) return UNABLE_WRITE_FILE;
-
   fclose(file);
+
+  if (ret != 1) return UNABLE_WRITE_FILE;
 
   return UPDATED;
 }
