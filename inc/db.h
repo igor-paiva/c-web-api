@@ -6,6 +6,8 @@
 #include "states.h"
 #include "linked_list.h"
 
+#define MAX_FILE_NAME_LENGTH 100
+
 typedef boolean (* CmpFunc)(void * person_data, void * attrs);
 
 state create_file_ifn_exists(const char * file_name);
@@ -36,6 +38,13 @@ state edit_row(
   void * key,
   void * new_data,
   size_t data_size
+);
+
+state remove_row(
+  const char * file_name,
+  CmpFunc cmp_key,
+  void * key,
+  size_t size
 );
 
 #endif

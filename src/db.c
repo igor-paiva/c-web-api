@@ -185,3 +185,71 @@ state edit_row(
 
   return UPDATED;
 }
+
+state remove_row(
+  const char * file_name,
+  CmpFunc cmp_key,
+  void * key,
+  size_t size
+) {
+  void * current = NULL;
+  char * data_file_name;
+  state op_state = DELETED;
+  FILE * db_file, * tmp_file;
+  char cpy_file_name[MAX_FILE_NAME_LENGTH];
+  char tmp_file_name[MAX_FILE_NAME_LENGTH];
+
+  current = malloc(size);
+
+  if (current == NULL) return ALLOC_FAIL;
+
+  /* cannot modify the file name, so its being copied */
+  strncpy(cpy_file_name, file_name, MAX_FILE_NAME_LENGTH);
+
+  data_file_name = (
+    /* + 1 to include the "/" */
+    strtok(cpy_file_name, "/") + ((strlen(files_folder) + 1) * sizeof(char))
+  );
+
+  sprintf(tmp_file_name, "tmp/%s", data_file_name);
+
+  tmp_file = fopen(tmp_file_name, "wb");
+
+  if (tmp_file == NULL) {
+    free(current);
+    return UNABLE_CREATE_FILE;
+  }
+
+  db_file = fopen(file_name, "rb");
+
+  if (db_file == NULL) {
+    op_state = UNABLE_OPEN_FILE;
+    goto end;
+  }
+
+  /* it should read only one member */
+  while(fread(current, size, 1, db_file) == 1) {
+    boolean cmp = (*cmp_key)(current, key);
+
+    if (!cmp) {
+      size_t ret = fwrite(current, size, 1, tmp_file);
+
+      if (ret != 1) {
+        fclose(db_file);
+        op_state = UNABLE_WRITE_FILE;
+        goto end;
+      }
+    }
+  }
+
+end:
+  free(current);
+  fclose(tmp_file);
+
+  if (is_success(op_state)) {
+    /* move the temporary file to override app_data file */
+    rename(tmp_file_name, file_name);
+  }
+
+  return op_state;
+}
