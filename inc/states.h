@@ -32,4 +32,6 @@ typedef enum {
 
 boolean is_error(state value);
 
+boolean is_success(state value);
+
 #endif
