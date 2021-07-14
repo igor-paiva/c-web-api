@@ -252,7 +252,8 @@ end:
 
   if (is_success(op_state)) {
     /* move the temporary file to override app_data file */
-    rename(tmp_file_name, file_name);
+    if (rename(tmp_file_name, file_name) != 0)
+      op_state = UNABLE_MOVE_FILE;
   }
 
   return op_state;
