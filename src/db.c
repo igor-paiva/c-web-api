@@ -12,7 +12,7 @@ state create_file_ifn_exists(const char * file_name) {
   if (file == NULL) {
     file = fopen(file_name, "wb");
 
-    if (!file) return UNABLE_OPEN_FILE;
+    if (file == NULL) return UNABLE_CREATE_FILE;
   }
 
   fclose(file);
@@ -23,19 +23,20 @@ state create_file_ifn_exists(const char * file_name) {
 state register_row(const char * file_name, void * data, size_t size) {
   size_t ret;
   FILE * file;
+  state op_state = CREATED;
 
   file = fopen(file_name, "ab");
 
-  if (!file) return UNABLE_OPEN_FILE;
+  if (file == NULL) return UNABLE_OPEN_FILE;
 
   ret = fwrite(data, size, 1, file);
 
   /* it should write only one member */
-  if (ret != 1) return UNABLE_WRITE_FILE;
+  if (ret != 1) op_state = UNABLE_WRITE_FILE;
 
   fclose(file);
 
-  return CREATED;
+  return op_state;
 }
 
 state get_all(const char * file_name, LinkedList * list, size_t size) {
@@ -133,7 +134,7 @@ state get_row(
 
   file = fopen(file_name, "rb");
 
-  if (!file) {
+  if (file == NULL) {
     free(row_data);
     return UNABLE_OPEN_FILE;
   }
@@ -173,7 +174,7 @@ state edit_row(
 
   file = fopen(file_name, "rb+");
 
-  if (!file) return UNABLE_OPEN_FILE;
+  if (file == NULL) return UNABLE_OPEN_FILE;
 
   fseek(file, offset, SEEK_SET);
 
