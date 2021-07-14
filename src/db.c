@@ -50,7 +50,10 @@ state get_all(const char * file_name, LinkedList * list, size_t size) {
 
   file = fopen(file_name, "rb");
 
-  if (!file) return UNABLE_OPEN_FILE;
+  if (file == NULL) {
+    free(current);
+    return UNABLE_OPEN_FILE;
+  }
 
   /* it should read only one member */
   while(fread(current, size, 1, file) == 1) {
