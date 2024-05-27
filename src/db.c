@@ -4,6 +4,8 @@
 
 #include "db.h"
 
+const char files_folder[] = "app_data";
+
 state create_file_ifn_exists(const char * file_name) {
   FILE * file;
 
@@ -18,6 +20,21 @@ state create_file_ifn_exists(const char * file_name) {
   fclose(file);
 
   return SUCCESS;
+}
+
+char * get_file_name(const char * tb_name) {
+  int sprintf_ret;
+  char * file_name;
+
+  file_name = (char *) malloc (MAX_FILE_NAME_LENGTH * sizeof(char));
+
+  if (file_name == NULL) return NULL;
+
+  sprintf_ret = sprintf(file_name, "%s/%s%s", files_folder, tb_name, DATA_FILE_EXTENSION);
+
+  if (sprintf_ret <= 0) return NULL;
+
+  return file_name;
 }
 
 state register_row(const char * file_name, void * data, size_t size) {
@@ -74,7 +91,7 @@ state get_all(const char * file_name, LinkedList * list, size_t size) {
 state find_row(
   const char * file_name,
   size_t size,
-  CmpFunc cmp_key,
+  const ColumnDefinition * pk,
   void * key,
   size_t * offset
 ) {
@@ -96,7 +113,7 @@ state find_row(
 
   /* it should read only one member */
   while(fread(current, size, 1, file) == 1) {
-    if ((*cmp_key)(current, key)) {
+    if (compare((*pk->getter)(current), key, pk->type, pk->length)) {
       found = TRUE;
       break;
     }
@@ -116,7 +133,7 @@ state find_row(
 
 state get_row(
   const char * file_name,
-  CmpFunc cmp_key,
+  const ColumnDefinition * pk,
   void * key,
   void * data,
   size_t data_size
@@ -127,7 +144,7 @@ state get_row(
   size_t offset, read_ret;
   state op_state = SUCCESS;
 
-  find_state = find_row(file_name, data_size, cmp_key, key, &offset);
+  find_state = find_row(file_name, data_size, pk, key, &offset);
 
   if (is_error(find_state)) return find_state;
 
@@ -162,7 +179,7 @@ state get_row(
 
 state edit_row(
   const char * file_name,
-  CmpFunc cmp_key,
+  const ColumnDefinition * pk,
   void * key,
   void * new_data,
   size_t data_size
@@ -171,7 +188,7 @@ state edit_row(
   state find_state;
   size_t offset, ret;
 
-  find_state = find_row(file_name, data_size, cmp_key, key, &offset);
+  find_state = find_row(file_name, data_size, pk, key, &offset);
 
   if (is_error(find_state)) return find_state;
 
@@ -192,7 +209,7 @@ state edit_row(
 
 state remove_row(
   const char * file_name,
-  CmpFunc cmp_key,
+  const ColumnDefinition * pk,
   void * key,
   size_t size
 ) {
@@ -233,7 +250,7 @@ state remove_row(
 
   /* it should read only one member */
   while(fread(current, size, 1, db_file) == 1) {
-    boolean cmp = (*cmp_key)(current, key);
+    boolean cmp = compare((*pk->getter)(current), key, pk->type, pk->length);
 
     if (!cmp) {
       size_t ret = fwrite(current, size, 1, tmp_file);
@@ -258,3 +275,90 @@ end:
 
   return op_state;
 }
+
+// state copy_to_list(
+//   const char * file_name,
+//   CmpFunc cmp_key,
+//   void * key,
+//   size_t size,
+//   LinkedList * list
+// ) {
+//   FILE * file;
+//   void * current = NULL;
+//   state op_state = SUCCESS;
+//   boolean not_found = TRUE;
+
+//   current = malloc(size);
+
+//   if (current == NULL) return ALLOC_FAIL;
+
+//   file = fopen(file_name, "rb");
+
+//   if (file == NULL) {
+//     free(current);
+//     return UNABLE_OPEN_FILE;
+//   }
+
+//   /* it should read only one member */
+//   while(fread(current, size, 1, file) == 1) {
+//     boolean cmp = (*cmp_key)(current, key);
+
+//     if (cmp) {
+//       not_found = FALSE;
+//     } else {
+//       state push_state = push_list(list, current, size);
+
+//       if (is_error(push_state)) {
+//         op_state = push_state;
+//         break;
+//       }
+//     }
+//   }
+
+//   fclose(file);
+//   free(current);
+
+//   if (not_found) return NOT_FOUND;
+
+//   return op_state;
+// }
+
+// state query_table(
+//   const char * file_name,
+//   CmpFunc cmp_attrs,
+//   Attr * attrs,
+//   LinkedList * list,
+//   size_t size
+// ) {
+//   FILE * file;
+//   void * current;
+//   state op_state = SUCCESS;
+
+//   current = malloc(size);
+
+//   if (current == NULL) return ALLOC_FAIL;
+
+//   file = fopen(file_name, "rb");
+
+//   if (file == NULL) {
+//     free(current);
+//     return UNABLE_OPEN_FILE;
+//   }
+
+//   /* it should read only one member at the time */
+//   while(fread(current, size, 1, file) == 1) {
+//     if ((*cmp_attrs)(current, attrs)) {
+//       state push_state = push_list(list, current, size);
+
+//       if (is_error(push_state)) {
+//         op_state = push_state;
+//         break;
+//       }
+//     }
+//   };
+
+//   fclose(file);
+//   free(current);
+
+//   return op_state;
+// }

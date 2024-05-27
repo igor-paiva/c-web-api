@@ -1,11 +1,13 @@
 # Executable
-BINFOLDER := bin/
+BINFOLDER := bin
 # .h
-INCFOLDER := inc/
+INCFOLDER := inc
 # .c
-SRCFOLDER := src/
+SRCFOLDER := src
 # .o
-OBJFOLDER := obj/
+OBJFOLDER := obj
+# Views folder
+VIEWSFOLDER := views
 
 # Address to run the server
 ADDRESS := localhost
@@ -16,21 +18,24 @@ PORT := 5000
 # Compiler
 CC := gcc
 
-CFLAGS := -pedantic -lpthread
+CFLAGS := -g -W -Wall -Wextra -pedantic -lpthread
 
-SRCFILES := $(wildcard src/*.c)
+SRCFILES := $(wildcard $(SRCFOLDER)/*.c $(SRCFOLDER)/*/*.c)
 
-all: $(SRCFILES:src/%.c=obj/%.o)
-	$(CC) $(OBJFOLDER)*.o $(CFLAGS) -o $(BINFOLDER)prog
+all: $(SRCFILES:$(SRCFOLDER)/%.c=$(OBJFOLDER)/%.o)
+	$(CC) $(OBJFOLDER)/*.o $(OBJFOLDER)/*/*.o  $(CFLAGS) -o $(BINFOLDER)/prog
 
-obj/%.o: src/%.c
-	$(CC) $(CFLAGS) -c $< -o $@ -I ./$(INCFOLDER)
+$(OBJFOLDER)/%.o: $(SRCFOLDER)/%.c
+	$(CC) $(CFLAGS) -c $< -o $@ -I ./$(INCFOLDER)/
 
-run: $(BINFOLDER)
-	./$(BINFOLDER)prog $(ADDRESS) $(PORT)
+$(OBJFOLDER)/%/%.o: $(SRCFOLDER)/%/%.c
+	$(CC) $(CFLAGS) -c $< -o $@ -I ./$(INCFOLDER)/
+
+run:
+	./$(BINFOLDER)/prog $(ADDRESS) $(PORT)
 
 .PHONY: clean
 
 clean:
-	rm -rf obj/*
-	rm -rf bin/*
+	rm -rf $(OBJFOLDER)/*.* $(OBJFOLDER)/*/*.*
+	rm -rf $(BINFOLDER)/*
