@@ -37,6 +37,13 @@ state get_row(
   size_t data_size
 );
 
+state check_row_exists(
+  const char * file_name,
+  const ColumnDefinition * pk,
+  void * key,
+  size_t data_size
+);
+
 state edit_row(
   const char * file_name,
   const ColumnDefinition * pk,

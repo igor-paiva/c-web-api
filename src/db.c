@@ -133,7 +133,7 @@ state find_row(
 
   *offset = count * size;
 
-  return SUCCESS;
+  return FOUND;
 }
 
 state get_row(
@@ -180,6 +180,17 @@ state get_row(
   free(row_data);
 
   return op_state;
+}
+
+state check_row_exists(
+  const char * file_name,
+  const ColumnDefinition * pk,
+  void * key,
+  size_t data_size
+) {
+  size_t offset;
+
+  return find_row(file_name, data_size, pk, key, &offset);
 }
 
 state edit_row(

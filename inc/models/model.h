@@ -12,9 +12,13 @@
 
 void * alloc_struct(size_t size);
 
-state model_create(void * data, size_t size, TableDefinition * tb_config);
+state check_primary_key_constraint(void * key, size_t size, TableDefinition * tb_config);
+
+state model_create(void * data, size_t size, TableDefinition * tb_config, void * key);
 
 state model_find(void * key, void * data, size_t size, TableDefinition * tb_config);
+
+state model_record_exists(void * key, size_t size, TableDefinition * tb_config);
 
 state model_list_all(LinkedList * list, size_t size, TableDefinition * tb_config);
 

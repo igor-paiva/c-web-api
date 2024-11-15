@@ -58,6 +58,7 @@ extern const HttpStatus HTTP_BAD_REQUEST;
 extern const HttpStatus HTTP_UNAUTHORIZED;
 extern const HttpStatus HTTP_FORBIDDEN;
 extern const HttpStatus HTTP_NOT_FOUND;
+extern const HttpStatus HTTP_CONFLICT;
 extern const HttpStatus HTTP_IAM_TEAPOT;
 extern const HttpStatus HTTP_UNPROCESSABLE_ENTITY;
 

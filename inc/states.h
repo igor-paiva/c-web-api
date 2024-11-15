@@ -20,7 +20,8 @@ typedef enum {
   CREATED,
   UPDATED,
   DELETED,
-  NOT_APPLICABLE
+  NOT_APPLICABLE,
+  FOUND
 } success_t;
 
 /* those will always be negative */
@@ -38,7 +39,8 @@ typedef enum {
   JSON_ITEM_ADD_FAIL,
   JSON_ITEM_PRINT_FAIL,
   JSON_ITEM_CREATE_FAIL,
-  INVALID_ROUTE_PATH
+  INVALID_ROUTE_PATH,
+  ALREADY_EXISTS
 } error_t;
 
 boolean is_error(state value);

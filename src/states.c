@@ -30,6 +30,8 @@ const HttpStatus * error_to_http(state value) {
       return &HTTP_UNPROCESSABLE_ENTITY;
     case INVALID_ROUTE_PATH:
       return &HTTP_BAD_REQUEST;
+    case ALREADY_EXISTS:
+      return &HTTP_CONFLICT;
     default:
       return &HTTP_INTERNAL_SERVER_ERROR;
   }

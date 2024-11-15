@@ -47,7 +47,7 @@ void set_person_age(void * data, void * value) {
 }
 
 state create(Person * person) {
-  return model_create((void *) person, sizeof(Person), &tb_person_def);
+  return model_create((void *) person, sizeof(Person), &tb_person_def, (void *) person->name);
 }
 
 state find(char * key, Person * person) {

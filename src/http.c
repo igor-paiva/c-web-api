@@ -19,6 +19,7 @@ const HttpStatus HTTP_BAD_REQUEST = { .status = 400, .name = "Bad Request" };
 const HttpStatus HTTP_UNAUTHORIZED = { .status = 401, .name = "Unauthorized" };
 const HttpStatus HTTP_FORBIDDEN = { .status = 403, .name = "Forbidden" };
 const HttpStatus HTTP_NOT_FOUND = { .status = 404, .name = "Not Found" };
+const HttpStatus HTTP_CONFLICT = { .status = 409, .name = "Conflict" };
 const HttpStatus HTTP_IAM_TEAPOT = { .status = 418, .name = "I'm a teapot" };
 const HttpStatus HTTP_UNPROCESSABLE_ENTITY = { .status = 422, .name = "Unprocessable Entity" };
 
