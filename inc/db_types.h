@@ -32,21 +32,4 @@ void * get_json_value(cJSON * item, column_type type, const unsigned long length
 
 cJSON * create_json_object(void * value, column_type type, boolean * string_ref);
 
-// DATE,
-// TIME,
-// DATETIME
-
-// char * create_date(uint8_t day, uint8_t month, unsigned int year);
-
-// char * create_datetime(
-//   uint8_t day,
-//   uint8_t month,
-//   unsigned int year,
-//   uint8_t hours,
-//   uint8_t minutes,
-//   uint8_t seconds
-// );
-
-// time_t create_time(uint8_t hours, uint8_t minutes, uint8_t seconds);
-
 #endif

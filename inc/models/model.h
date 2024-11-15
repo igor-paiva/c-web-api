@@ -22,12 +22,4 @@ state model_update(void * key, void * data, size_t size, TableDefinition * tb_co
 
 state model_destroy(void * key, size_t size, TableDefinition * tb_config);
 
-// state model_query_table(
-//   LinkedList * list,
-//   size_t size,
-//   CmpFunc cmp_attr,
-//   Attr *attrs,
-//   TableDefinition * tb_config
-// );
-
 #endif

@@ -52,41 +52,4 @@ state remove_row(
   size_t size
 );
 
-// state query_table(
-//   const char * file_name,
-//   CmpFunc cmp_attrs,
-//   Attr * attrs,
-//   LinkedList * list,
-//   size_t size
-// );
-
-// state copy_to_list(
-//   const char * file_name,
-//   CmpFunc cmp_key,
-//   void * key,
-//   size_t size,
-//   LinkedList * list
-// );
-
-// #define ATTR_LENGTH 50
-
-// typedef enum {
-//   OR = 1,
-//   AND
-// } operator;
-
-// typedef struct Attr {
-//   char attr[ATTR_LENGTH];
-//   /*
-//     if the mult_values is TRUE this we should use this as a pointer array
-//     if it's FALSE then we should only access a single value
-//     (*value for pointers types and **value for others)
-//   */
-//   void ** values;
-//   boolean regex;
-//   boolean mult_values;
-//   /* AND, OR and etc with the multiple received fields */
-//   operator field_operator;
-// } Attr;
-
 #endif

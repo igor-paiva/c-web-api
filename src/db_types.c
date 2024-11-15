@@ -183,25 +183,3 @@ cJSON * create_json_object(void * value, column_type type, boolean * string_ref)
       return cJSON_CreateNumber(*((double *) value));
   }
 }
-
-// time_t create_datime(uint8_t hours, uint8_t minutes, uint8_t seconds) {
-//   struct tm tm;
-//   char time_detail[9];
-
-//   sprintf(time_detail, "%j  %m %Y %d:%d:%d", hours, minutes, seconds);
-
-//   strptime(time_detail, "%Y-%m-%jT%H:%M:%S", &tm);
-
-//   return mktime(&tm);
-// }
-
-// time_t create_time(uint8_t hours, uint8_t minutes, uint8_t seconds) {
-//   struct tm tm;
-//   char time_detail[9];
-
-//   sprintf(time_detail, "%d:%d:%d", hours, minutes, seconds);
-
-//   strptime(time_detail, "%H:%M:%S", &tm);
-
-//   return mktime(&tm);
-// }

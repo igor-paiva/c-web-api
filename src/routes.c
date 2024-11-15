@@ -42,15 +42,3 @@ Route * routes[MAX_ROUTES] = {
   &person_update,
   &person_delete
 };
-
-// void save_routes(Route ** routes, int * routes_num) {
-//   routes[(*routes_num)++] = &person_read;
-
-//   routes[(*routes_num)++] = &person_list;
-
-//   routes[(*routes_num)++] = &person_creation;
-
-//   routes[(*routes_num)++] = &person_update;
-
-//   routes[(*routes_num)++] = &person_delete;
-// }
