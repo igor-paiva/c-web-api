@@ -70,7 +70,7 @@ char * mount_content_length(size_t content_size);
 
 char * get_content(char * request);
 
-boolean req_has_body(char method[HTTP_FIRST_LINE_LENGTH]);
+boolean req_has_body(char method[HTTP_METHOD_LENGTH]);
 
 // QueryParam * get_query_params(char * path, char * route_path, int query_param_num);
 

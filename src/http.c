@@ -25,11 +25,11 @@ const HttpStatus HTTP_UNPROCESSABLE_ENTITY = { .status = 422, .name = "Unprocess
 /* 5XX status */
 const HttpStatus HTTP_INTERNAL_SERVER_ERROR = { .status = 500, .name = "Internal Server Error" };
 
-boolean req_has_body(char method[HTTP_FIRST_LINE_LENGTH]) {
+boolean req_has_body(char method[HTTP_METHOD_LENGTH]) {
   return (
-    strncmp(method, "POST", HTTP_FIRST_LINE_LENGTH) == 0
-    || strncmp(method, "PUT", HTTP_FIRST_LINE_LENGTH) == 0
-    || strncmp(method, "PATCH", HTTP_FIRST_LINE_LENGTH) == 0
+    strncmp(method, "POST", HTTP_METHOD_LENGTH) == 0
+    || strncmp(method, "PUT", HTTP_METHOD_LENGTH) == 0
+    || strncmp(method, "PATCH", HTTP_METHOD_LENGTH) == 0
   );
 }
 
