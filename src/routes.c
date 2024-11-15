@@ -23,7 +23,7 @@ Route person_creation = {
 Route person_update = {
   .handler = &update_person,
   .path = "/person",
-  .method = "PATCH",
+  .method = "PUT",
   .regex = "/person\\?name=[a-zA-Z0-9_]+",
 };
 
