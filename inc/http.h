@@ -75,6 +75,6 @@ boolean req_has_body(char method[HTTP_METHOD_LENGTH]);
 // QueryParam * get_query_params(char * path, char * route_path, int query_param_num);
 
 // this int represents the state type
-int get_query_params(char * path, int * query_param_num, QueryParam * params);
+int get_query_params(char * path, int * query_param_num, QueryParam ** params);
 
 #endif

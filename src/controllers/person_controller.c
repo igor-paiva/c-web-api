@@ -109,7 +109,7 @@ const HttpStatus * update_person(ControllerActionParam * param) {
     free(person);
     return error_to_http(update_state);
   }
-  
+
   free(person);
 
   return &HTTP_OK;

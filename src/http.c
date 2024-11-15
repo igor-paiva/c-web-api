@@ -77,7 +77,7 @@ char * get_content(char * request) {
   return content;
 }
 
-state get_query_params(char * path, int * params_count, QueryParam * params) {
+state get_query_params(char * path, int * params_count, QueryParam ** params) {
   char * ptr;
   char * start_position = strchr(path, '?');
   char format[QUERY_PARAM_NAME_LENGTH + QUERY_PARAM_VALUE_LENGTH + 2];
@@ -87,17 +87,17 @@ state get_query_params(char * path, int * params_count, QueryParam * params) {
   if (start_position == NULL || (start_position && start_position[1] == '='))
     return INVALID_ROUTE_PATH;
 
-  params = (QueryParam *) malloc (MAX_QUERY_PARAMS * sizeof(QueryParam));
+  *params = (QueryParam *) malloc (MAX_QUERY_PARAMS * sizeof(QueryParam));
 
-  if (params == NULL) return ALLOC_FAIL;
+  if (*params == NULL) return ALLOC_FAIL;
 
   ptr = start_position + sizeof(char);
 
   sprintf(format, "%c%d[^=]=%c%d[^& ;]", '%', QUERY_PARAM_NAME_LENGTH, '%', QUERY_PARAM_VALUE_LENGTH);
 
-  sscanf(ptr, format, params[*params_count].name, params[*params_count].value);
+  sscanf(ptr, format, (*params)[*params_count].name, (*params)[*params_count].value);
 
-  if (strlen(params[*params_count].value) <= 0) return INVALID_ROUTE_PATH;
+  if (strlen((*params)[*params_count].value) <= 0) return INVALID_ROUTE_PATH;
 
   *params_count += 1;
 
@@ -112,15 +112,15 @@ state get_query_params(char * path, int * params_count, QueryParam * params) {
 
     ptr += sizeof(char);
 
-    sscanf(ptr, format, params[*params_count].name, params[*params_count].value);
+    sscanf(ptr, format, (*params)[*params_count].name, (*params)[*params_count].value);
 
     *params_count += 1;
   }
 
   if (*params_count < MAX_QUERY_PARAMS) {
-    params = (QueryParam *) realloc (params, *params_count * sizeof(QueryParam));
+    *params = (QueryParam *) realloc (*params, *params_count * sizeof(QueryParam));
 
-    if (params == NULL) return ALLOC_FAIL;
+    if (*params == NULL) return ALLOC_FAIL;
   }
 
   return SUCCESS;

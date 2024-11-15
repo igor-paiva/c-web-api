@@ -54,11 +54,11 @@ Route * find_route(char * method, char * path) {
     boolean path_cmp = FALSE;
     boolean method_cmp = strncmp(routes[i]->method, method, HTTP_METHOD_LENGTH) == 0;
 
-    if (strchr(routes[i]->path, ':')) {
+    if (strlen(routes[i]->regex) > 0) {
       int reti;
       regex_t regex;
 
-      reti = regcomp(&regex, routes[i]->regex, 0);
+      reti = regcomp(&regex, routes[i]->regex, REG_EXTENDED);
 
       if (reti) {
         fprintf(stdout, "\nFail to compile Regex\n");
@@ -78,6 +78,8 @@ Route * find_route(char * method, char * path) {
 
         fprintf(stdout, "\nRegex match failed: %s\n", msgbuf);
       }
+
+      regfree(&regex);
     } else {
       path_cmp = strncmp(routes[i]->path, path, ROUTE_PATH_LENGTH) == 0;
     }
@@ -239,8 +241,8 @@ void handle_route_found(
     received_content = get_content(request);
   }
 
-  if (strchr(route->path, '?') != NULL) {
-    state op_state = get_query_params(request_path, &query_params.count, query_params.list);
+  if (route->regex != NULL && strchr(route->regex, '?') != NULL) {
+    state op_state = get_query_params(request_path, &query_params.count, &query_params.list);
 
     if (is_error(op_state)) {
       send_response(descriptor, bufout, NULL, 0, error_to_http(op_state));
