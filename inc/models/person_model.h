@@ -15,8 +15,8 @@ typedef struct Person {
   char name[PERSON_NAME_LENGTH];
 } Person;
 
-const ColumnDefinition PERSON_NAME_COLUMN;
-const ColumnDefinition PERSON_AGE_COLUMN;
+extern const ColumnDefinition PERSON_NAME_COLUMN;
+extern const ColumnDefinition PERSON_AGE_COLUMN;
 
 state find(char * key, Person * person);
 

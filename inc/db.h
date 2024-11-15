@@ -11,7 +11,7 @@
 #define MAX_FILE_NAME_LENGTH 50
 #define DATA_FILE_EXTENSION ".bin"
 
-const char files_folder[9];
+extern const char files_folder[9];
 
 char * get_file_name(const char * tb_name);
 

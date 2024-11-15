@@ -19,6 +19,6 @@ typedef struct Route {
   char method[HTTP_METHOD_LENGTH];
 } Route;
 
-Route * routes[MAX_ROUTES];
+extern Route * routes[MAX_ROUTES];
 
 #endif

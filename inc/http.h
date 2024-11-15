@@ -19,7 +19,7 @@
 
 typedef uint8_t boolean;
 
-const char HTTP_VERSION[9];
+extern const char HTTP_VERSION[9];
 
 typedef struct HttpStatus {
   int status;
@@ -49,20 +49,20 @@ typedef struct QueryParamList {
 /* More HTTP status can be added when necessary */
 
 /* 2XX status */
-const HttpStatus HTTP_OK;
-const HttpStatus HTTP_CREATED;
-const HttpStatus HTTP_NO_CONTENT;
+extern const HttpStatus HTTP_OK;
+extern const HttpStatus HTTP_CREATED;
+extern const HttpStatus HTTP_NO_CONTENT;
 
 /* 4XX status */
-const HttpStatus HTTP_BAD_REQUEST;
-const HttpStatus HTTP_UNAUTHORIZED;
-const HttpStatus HTTP_FORBIDDEN;
-const HttpStatus HTTP_NOT_FOUND;
-const HttpStatus HTTP_IAM_TEAPOT;
-const HttpStatus HTTP_UNPROCESSABLE_ENTITY;
+extern const HttpStatus HTTP_BAD_REQUEST;
+extern const HttpStatus HTTP_UNAUTHORIZED;
+extern const HttpStatus HTTP_FORBIDDEN;
+extern const HttpStatus HTTP_NOT_FOUND;
+extern const HttpStatus HTTP_IAM_TEAPOT;
+extern const HttpStatus HTTP_UNPROCESSABLE_ENTITY;
 
 /* 5XX status */
-const HttpStatus HTTP_INTERNAL_SERVER_ERROR;
+extern const HttpStatus HTTP_INTERNAL_SERVER_ERROR;
 
 char * mount_initial_line(const HttpStatus * status);
 
