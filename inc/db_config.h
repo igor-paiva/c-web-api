@@ -38,7 +38,7 @@ typedef struct TableDefinition {
 
 const ColumnDefinition * find_column(const ColumnDefinition * columns[MAX_COLUMNS], char * column_name);
 
-void load_database_info(TableDefinition ** tables_config, int * tables_count);
+state load_database_info(TableDefinition ** tables_config, int * tables_count);
 
 void init_mutexes(TableDefinition ** tables_config, int * tables_count);
 

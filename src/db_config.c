@@ -17,8 +17,18 @@ const ColumnDefinition * find_column(const ColumnDefinition * columns[MAX_COLUMN
   return NULL;
 }
 
-void load_database_info(TableDefinition ** tables_config, int * tables_count) {
+state load_database_info(TableDefinition ** tables_config, int * tables_count) {
+  state table_file = SUCCESS;
+
   tables_config[(*tables_count)++] = &tb_person_def;
+
+  for (int i = 0; i < *tables_count; i++) {
+    table_file = create_file_ifn_exists(tables_config[i]->name);
+
+    if (is_error(table_file)) break;
+  }
+
+  return table_file;
 }
 
 void init_mutexes(TableDefinition ** tables_config, int * tables_count) {

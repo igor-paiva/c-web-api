@@ -91,10 +91,12 @@ Route * find_route(char * method, char * path) {
   return NULL;
 }
 
-void load_database_config() {
-  load_database_info(tables_config, &tables_count);
+state load_database_config() {
+  state load_state = load_database_info(tables_config, &tables_count);
 
   init_mutexes(tables_config, &tables_count);
+
+  return load_state;
 }
 
 void set_response_headers() {
@@ -369,7 +371,10 @@ int main(int argc, char * argv[]) {
 
   set_response_headers();
 
-  load_database_config();
+  handle_critical_failure(
+    load_database_config(),
+    "Failed to load database configuration\n"
+  );
 
   sem_init(&running_threads, 0, MAX_THREADS);
 

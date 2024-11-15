@@ -6,18 +6,23 @@
 
 const char files_folder[] = "app_data";
 
-state create_file_ifn_exists(const char * file_name) {
+state create_file_ifn_exists(const char * tb_name) {
   FILE * file;
+  char * file_name = get_file_name(tb_name);
 
   file = fopen(file_name, "rb");
 
   if (file == NULL) {
     file = fopen(file_name, "wb");
 
-    if (file == NULL) return UNABLE_CREATE_FILE;
+    if (file == NULL) {
+      free(file_name);
+      return UNABLE_CREATE_FILE;
+    }
   }
 
   fclose(file);
+  free(file_name);
 
   return SUCCESS;
 }

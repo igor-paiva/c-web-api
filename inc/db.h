@@ -8,14 +8,14 @@
 #include "db_config.h"
 #include "linked_list.h"
 
-#define MAX_FILE_NAME_LENGTH 50
+#define MAX_FILE_NAME_LENGTH 54
 #define DATA_FILE_EXTENSION ".bin"
 
 extern const char files_folder[9];
 
 char * get_file_name(const char * tb_name);
 
-state create_file_ifn_exists(const char * file_name);
+state create_file_ifn_exists(const char * tb_name);
 
 state register_row(const char * file_name, void * data, size_t size);
 
